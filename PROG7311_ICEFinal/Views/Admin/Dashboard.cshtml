@@ -1,0 +1,116 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<p class="mb-4" style="color:#4a6060; font-size:.925rem;">
+    Welcome back, <strong>@ViewBag.UserName</strong> — here's your Admin overview.
+</p>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <svg width="26" height="26" fill="none" stroke="#3a9490" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div>
+                <div class="stat-value">@ViewBag.TotalEmployees</div>
+                <div class="stat-label">Employees</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <svg width="26" height="26" fill="none" stroke="#3a9490" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div>
+                <div class="stat-value">@ViewBag.TotalCustomers</div>
+                <div class="stat-label">Active Customers</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <svg width="26" height="26" fill="none" stroke="#3a9490" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div>
+                <div class="stat-value">@ViewBag.TotalBookings</div>
+                <div class="stat-label">Total Bookings</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <svg width="26" height="26" fill="none" stroke="#3a9490" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            </div>
+            <div>
+                <div class="stat-value">@ViewBag.TotalOrders</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Access -->
+<h2 style="font-size:1rem; font-weight:600; color:#4a6060; margin-bottom:1rem; letter-spacing:.04em; text-transform:uppercase;">Quick Access</h2>
+<div class="row g-3">
+    <div class="col-12 col-sm-6 col-md-4">
+        <a asp-controller="Admin" asp-action="Employees" class="text-decoration-none">
+            <div class="pc-card p-4 text-center dashboard-card">
+                <div class="dash-icon mb-3">
+                    <svg width="40" height="40" fill="none" stroke="#4aada8" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                </div>
+                <div style="font-weight:600; color:#1a2e2e; font-size:1rem;">Manage Employees</div>
+                <div style="font-size:.8rem; color:#6a8080; margin-top:.3rem;">Add, edit &amp; deactivate staff</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-12 col-sm-6 col-md-4">
+        <a asp-controller="Admin" asp-action="Customers" class="text-decoration-none">
+            <div class="pc-card p-4 text-center dashboard-card">
+                <div class="dash-icon mb-3">
+                    <svg width="40" height="40" fill="none" stroke="#4aada8" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div style="font-weight:600; color:#1a2e2e; font-size:1rem;">Manage Customers</div>
+                <div style="font-size:.8rem; color:#6a8080; margin-top:.3rem;">View &amp; maintain customer records</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-12 col-sm-6 col-md-4">
+        <a asp-controller="Admin" asp-action="Bookings" class="text-decoration-none">
+            <div class="pc-card p-4 text-center dashboard-card">
+                <div class="dash-icon mb-3">
+                    <svg width="40" height="40" fill="none" stroke="#4aada8" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div style="font-weight:600; color:#1a2e2e; font-size:1rem;">Manage Bookings</div>
+                <div style="font-size:.8rem; color:#6a8080; margin-top:.3rem;">Schedule &amp; assign service bookings</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-12 col-sm-6 col-md-4">
+        <a asp-controller="Admin" asp-action="Orders" class="text-decoration-none">
+            <div class="pc-card p-4 text-center dashboard-card">
+                <div class="dash-icon mb-3">
+                    <svg width="40" height="40" fill="none" stroke="#4aada8" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                </div>
+                <div style="font-weight:600; color:#1a2e2e; font-size:1rem;">View Orders</div>
+                <div style="font-size:.8rem; color:#6a8080; margin-top:.3rem;">Monitor all customer orders</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-12 col-sm-6 col-md-4">
+        <a asp-controller="Admin" asp-action="AddEmployee" class="text-decoration-none">
+            <div class="pc-card p-4 text-center dashboard-card">
+                <div class="dash-icon mb-3">
+                    <svg width="40" height="40" fill="none" stroke="#4aada8" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                </div>
+                <div style="font-weight:600; color:#1a2e2e; font-size:1rem;">Add Employee</div>
+                <div style="font-size:.8rem; color:#6a8080; margin-top:.3rem;">Register a new staff member</div>
+            </div>
+        </a>
+    </div>
+</div>

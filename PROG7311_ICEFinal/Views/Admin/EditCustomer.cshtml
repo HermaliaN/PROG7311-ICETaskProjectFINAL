@@ -1,0 +1,67 @@
+@model PROG7311_ICEFinal.Models.Customer
+@{
+    ViewData["Title"] = "Edit Customer";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a asp-action="Customers" class="btn-outline-teal">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+    </a>
+    <h1 class="page-title mb-0">Edit Customer</h1>
+</div>
+
+<div class="pc-card p-4" style="max-width:700px;">
+    <form asp-action="EditCustomer" method="post">
+        @Html.AntiForgeryToken()
+        <input asp-for="CustomerId" type="hidden" />
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="RegisteredDate" class="form-label"></label>
+                <input asp-for="RegisteredDate" type="date" class="form-control" />
+                <span asp-validation-for="RegisteredDate" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Address" class="form-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Status</label>
+                <div class="d-flex align-items-center gap-3 mt-1">
+                    <div class="form-check">
+                        <input asp-for="IsActive" type="checkbox" class="form-check-input" id="isActiveCheck" />
+                        <label class="form-check-label" for="isActiveCheck">Active</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn-teal">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Save Changes
+            </button>
+            <a asp-action="Customers" class="btn-outline-teal">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
