@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PROG7311_ICEFinal.Models;
 
+// Jarrud Cochrane
+
 namespace PROG7311_ICEFinal.Data
 {
     public class ApplicationDbContext : DbContext
