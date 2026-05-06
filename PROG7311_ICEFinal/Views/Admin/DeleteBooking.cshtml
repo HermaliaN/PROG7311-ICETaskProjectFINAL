@@ -1,0 +1,86 @@
+@model PROG7311_ICEFinal.Models.Booking
+@{
+    ViewData["Title"] = "Delete Booking";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a asp-action="Bookings" class="btn-outline-teal">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+    </a>
+    <h1 class="page-title mb-0">Delete Booking</h1>
+</div>
+
+<div class="pc-card p-4" style="max-width:560px;">
+    <div class="d-flex align-items-start gap-3 mb-4">
+        <div style="width:48px;height:48px;background:#fff0f0;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="24" height="24" fill="none" stroke="#c0392b" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+        </div>
+        <div>
+            <p style="font-weight:600;color:#1a2e2e;margin:0 0 .4rem;">Are you sure you want to permanently delete this booking?</p>
+            <p style="font-size:.875rem;color:#6a8080;margin:0;">This action cannot be undone. The booking record will be removed entirely.</p>
+        </div>
+    </div>
+
+    <div style="background:#f8fbfb;border:1px solid #e2eded;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.5rem;">
+        <div class="row g-2" style="font-size:.875rem;">
+            <div class="col-4" style="color:#6a8080;font-weight:500;">Booking ID</div>
+            <div class="col-8" style="color:#1a2e2e;font-weight:600;">#@Model.BookingId</div>
+
+            <div class="col-4" style="color:#6a8080;font-weight:500;">Customer</div>
+            <div class="col-8" style="color:#1a2e2e;">@Model.Customer?.Name</div>
+
+            <div class="col-4" style="color:#6a8080;font-weight:500;">Service</div>
+            <div class="col-8" style="color:#1a2e2e;">@Model.ServiceType</div>
+
+            <div class="col-4" style="color:#6a8080;font-weight:500;">Booking Date</div>
+            <div class="col-8" style="color:#1a2e2e;">@Model.BookingDate.ToString("dd MMM yyyy HH:mm")</div>
+
+            <div class="col-4" style="color:#6a8080;font-weight:500;">Technician</div>
+            <div class="col-8" style="color:#1a2e2e;">
+                @if (Model.Technician != null)
+                {
+                    @($"{Model.Technician.FirstName} {Model.Technician.LastName}")
+                }
+                else
+                {
+                    <span style="color:#b0c0c0;font-style:italic;">Unassigned</span>
+                }
+            </div>
+
+            <div class="col-4" style="color:#6a8080;font-weight:500;">Status</div>
+            <div class="col-8">
+                @{
+                    var statusBadge = Model.Status switch {
+                        "Pending"     => "badge-pending",
+                        "In Progress" => "badge-inprogress",
+                        "Completed"   => "badge-completed",
+                        "Cancelled"   => "badge-cancelled",
+                        _             => "badge-pending"
+                    };
+                }
+                <span class="status-badge @statusBadge">@Model.Status</span>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="DeleteBooking" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.BookingId" />
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn-danger-soft" style="background:#c0392b;color:#fff;border-color:#c0392b;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+                    <path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
+                </svg>
+                Confirm Delete
+            </button>
+            <a asp-action="Bookings" class="btn-outline-teal">Cancel</a>
+        </div>
+    </form>
+</div>

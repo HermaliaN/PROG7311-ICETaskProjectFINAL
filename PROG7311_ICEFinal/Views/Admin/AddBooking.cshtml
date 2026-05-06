@@ -1,0 +1,91 @@
+@model PROG7311_ICEFinal.Models.Booking
+@{
+    ViewData["Title"] = "Add Booking";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a asp-action="Bookings" class="btn-outline-teal">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+    </a>
+    <h1 class="page-title mb-0">Add Booking</h1>
+</div>
+
+<div class="pc-card p-4" style="max-width:700px;">
+    <form asp-action="AddBooking" method="post">
+        @Html.AntiForgeryToken()
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="CustomerId" class="form-label"></label>
+                <select asp-for="CustomerId" class="form-select">
+                    <option value="">-- Select Customer --</option>
+                    @foreach (var c in ViewBag.Customers as IEnumerable<PROG7311_ICEFinal.Models.Customer>)
+                    {
+                        <option value="@c.CustomerId">@c.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="ServiceType" class="form-label"></label>
+                <select asp-for="ServiceType" class="form-select">
+                    <option value="">-- Select Service --</option>
+                    <option value="Hardware Repair">Hardware Repair</option>
+                    <option value="Software Installation">Software Installation</option>
+                    <option value="Virus Removal">Virus Removal</option>
+                    <option value="Data Recovery">Data Recovery</option>
+                    <option value="Network Setup">Network Setup</option>
+                    <option value="General Maintenance">General Maintenance</option>
+                    <option value="Screen Replacement">Screen Replacement</option>
+                    <option value="Upgrade">Upgrade</option>
+                    <option value="Other">Other</option>
+                </select>
+                <span asp-validation-for="ServiceType" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="BookingDate" class="form-label"></label>
+                <input asp-for="BookingDate" type="datetime-local" class="form-control" />
+                <span asp-validation-for="BookingDate" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="TechnicianId" class="form-label"></label>
+                <select asp-for="TechnicianId" class="form-select">
+                    <option value="">-- Unassigned --</option>
+                    @foreach (var t in ViewBag.Technicians as IEnumerable<PROG7311_ICEFinal.Models.Employee>)
+                    {
+                        <option value="@t.EmployeeId">@t.FirstName @t.LastName</option>
+                    }
+                </select>
+                <span asp-validation-for="TechnicianId" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" class="form-select">
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="4"
+                          placeholder="Describe the issue or service required…"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn-teal">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Create Booking
+            </button>
+            <a asp-action="Bookings" class="btn-outline-teal">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

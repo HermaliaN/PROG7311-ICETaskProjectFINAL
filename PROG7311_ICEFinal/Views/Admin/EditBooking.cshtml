@@ -1,0 +1,118 @@
+@model PROG7311_ICEFinal.Models.Booking
+@{
+    ViewData["Title"] = "Edit Booking";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a asp-action="Bookings" class="btn-outline-teal">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+    </a>
+    <h1 class="page-title mb-0">Edit Booking <span style="color:#6a8080; font-weight:400;">#@Model.BookingId</span></h1>
+</div>
+
+<div class="pc-card p-4" style="max-width:700px;">
+    <form asp-action="EditBooking" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="BookingId" />
+        <input type="hidden" asp-for="AssignedDate" />
+        <input type="hidden" asp-for="CompletionDate" />
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="CustomerId" class="form-label"></label>
+                <select asp-for="CustomerId" class="form-select">
+                    <option value="">-- Select Customer --</option>
+                    @foreach (var c in ViewBag.Customers as IEnumerable<PROG7311_ICEFinal.Models.Customer>)
+                    {
+                        <option value="@c.CustomerId" selected="@(c.CustomerId == Model.CustomerId)">@c.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="ServiceType" class="form-label"></label>
+                <select asp-for="ServiceType" class="form-select">
+                    <option value="">-- Select Service --</option>
+                    <option value="Hardware Repair">Hardware Repair</option>
+                    <option value="Software Installation">Software Installation</option>
+                    <option value="Virus Removal">Virus Removal</option>
+                    <option value="Data Recovery">Data Recovery</option>
+                    <option value="Network Setup">Network Setup</option>
+                    <option value="General Maintenance">General Maintenance</option>
+                    <option value="Screen Replacement">Screen Replacement</option>
+                    <option value="Upgrade">Upgrade</option>
+                    <option value="Other">Other</option>
+                </select>
+                <span asp-validation-for="ServiceType" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="BookingDate" class="form-label"></label>
+                <input asp-for="BookingDate" type="datetime-local" class="form-control" />
+                <span asp-validation-for="BookingDate" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="TechnicianId" class="form-label"></label>
+                <select asp-for="TechnicianId" class="form-select">
+                    <option value="">-- Unassigned --</option>
+                    @foreach (var t in ViewBag.Technicians as IEnumerable<PROG7311_ICEFinal.Models.Employee>)
+                    {
+                        <option value="@t.EmployeeId" selected="@(t.EmployeeId == Model.TechnicianId)">@t.FirstName @t.LastName</option>
+                    }
+                </select>
+                <span asp-validation-for="TechnicianId" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" class="form-select">
+                    <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
+                    <option value="In Progress" selected="@(Model.Status == "In Progress")">In Progress</option>
+                    <option value="Completed" selected="@(Model.Status == "Completed")">Completed</option>
+                    <option value="Cancelled" selected="@(Model.Status == "Cancelled")">Cancelled</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        @if (Model.AssignedDate.HasValue || Model.CompletionDate.HasValue)
+        {
+            <div class="pc-card mt-4 p-3" style="background:#f5fafa; border:1px solid #d4eeec;">
+                <p class="mb-1" style="font-size:.8rem; font-weight:600; color:#4a6060; text-transform:uppercase; letter-spacing:.08em;">Timeline</p>
+                <div class="d-flex gap-4 flex-wrap mt-2" style="font-size:.875rem; color:#2d4040;">
+                    @if (Model.AssignedDate.HasValue)
+                    {
+                        <div>
+                            <span style="color:#6a8080;">Assigned:</span>
+                            <strong>@Model.AssignedDate.Value.ToString("dd MMM yyyy HH:mm")</strong>
+                        </div>
+                    }
+                    @if (Model.CompletionDate.HasValue)
+                    {
+                        <div>
+                            <span style="color:#6a8080;">Completed:</span>
+                            <strong>@Model.CompletionDate.Value.ToString("dd MMM yyyy HH:mm")</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn-teal">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                Save Changes
+            </button>
+            <a asp-action="Bookings" class="btn-outline-teal">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,60 @@
+@model PROG7311_ICEFinal.Models.Employee
+@{
+    ViewData["Title"] = "Deactivate Employee";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a asp-action="Employees" class="btn-outline-teal">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+    </a>
+    <h1 class="page-title mb-0">Deactivate Employee</h1>
+</div>
+
+<div class="pc-card p-4" style="max-width:560px;">
+    <div class="d-flex align-items-start gap-3 mb-4">
+        <div style="width:48px;height:48px;background:#fff0f0;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="24" height="24" fill="none" stroke="#c0392b" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div>
+            <p style="font-weight:600;color:#1a2e2e;margin:0 0 .4rem;">Are you sure you want to deactivate this employee?</p>
+            <p style="font-size:.875rem;color:#6a8080;margin:0;">This will mark the employee as inactive. Their booking history will be preserved.</p>
+        </div>
+    </div>
+
+    <div style="background:#f8fbfb;border:1px solid #e2eded;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.5rem;">
+        <div class="row g-2" style="font-size:.875rem;">
+            <div class="col-4" style="color:#6a8080;font-weight:500;">Name</div>
+            <div class="col-8" style="color:#1a2e2e;font-weight:600;">@Model.FirstName @Model.LastName</div>
+            <div class="col-4" style="color:#6a8080;font-weight:500;">Role</div>
+            <div class="col-8">
+                @{
+                    var roleBadge = Model.Role switch {
+                        "Admin" => "badge-admin",
+                        "Technician" => "badge-technician",
+                        "Sales" => "badge-sales",
+                        _ => "badge-received"
+                    };
+                }
+                <span class="status-badge @roleBadge">@Model.Role</span>
+            </div>
+            <div class="col-4" style="color:#6a8080;font-weight:500;">Email</div>
+            <div class="col-8" style="color:#1a2e2e;">@Model.Email</div>
+            <div class="col-4" style="color:#6a8080;font-weight:500;">Bookings</div>
+            <div class="col-8" style="color:#1a2e2e;">@Model.Bookings.Count assigned</div>
+        </div>
+    </div>
+
+    <form asp-action="DeleteEmployee" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.EmployeeId" />
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn-danger-soft" style="background:#c0392b;color:#fff;border-color:#c0392b;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                Confirm Deactivate
+            </button>
+            <a asp-action="Employees" class="btn-outline-teal">Cancel</a>
+        </div>
+    </form>
+</div>

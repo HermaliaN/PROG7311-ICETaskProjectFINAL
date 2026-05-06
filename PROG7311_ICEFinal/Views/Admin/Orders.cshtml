@@ -1,0 +1,116 @@
+@model IEnumerable<PROG7311_ICEFinal.Models.Order>
+@{
+    ViewData["Title"] = "Orders";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success-custom">✓ @TempData["Success"]</div>
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="page-title mb-0">Orders</h1>
+    <div style="font-size:.8rem;color:#6a8080;background:#f0f4f4;padding:.4rem .9rem;border-radius:20px;border:1px solid #e2eded;">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:.3rem;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Read-only — managed by Sales team
+    </div>
+</div>
+
+<div class="pc-card p-3 mb-3">
+    <form method="get" class="filter-bar">
+        <div class="search-wrap">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" name="search" placeholder="Search product or customer…" value="@ViewBag.CurrentSearch" />
+        </div>
+        <select name="statusFilter" class="status-select" onchange="this.form.submit()">
+            <option value="All" selected="@(ViewBag.StatusFilter == null || ViewBag.StatusFilter == "All")">All Statuses</option>
+            <option value="Received"   selected="@(ViewBag.StatusFilter == "Received")">Received</option>
+            <option value="Processing" selected="@(ViewBag.StatusFilter == "Processing")">Processing</option>
+            <option value="Dispatched" selected="@(ViewBag.StatusFilter == "Dispatched")">Dispatched</option>
+        </select>
+        <div class="filter-group">
+            <button type="submit" name="sortOrder" value="desc" class="@(ViewBag.CurrentSort != "asc" ? "active" : "")">Newest</button>
+            <button type="submit" name="sortOrder" value="asc"  class="@(ViewBag.CurrentSort == "asc"  ? "active" : "")">Oldest</button>
+        </div>
+        <button type="submit" class="btn-teal">Search</button>
+    </form>
+</div>
+
+<!-- Summary row -->
+<div class="row g-3 mb-3">
+    @{
+        var totalOrders    = Model.Count();
+        var totalRevenue   = Model.Sum(o => o.Amount);
+        var pendingOrders  = Model.Count(o => o.OrderStatus == "Received" || o.OrderStatus == "Processing");
+        var dispatchedCount = Model.Count(o => o.OrderStatus == "Dispatched");
+    }
+    <div class="col-6 col-md-3">
+        <div class="pc-card p-3 text-center">
+            <div style="font-size:1.6rem;font-weight:700;color:#4aada8;">@totalOrders</div>
+            <div style="font-size:.78rem;color:#6a8080;font-weight:500;">Total Orders</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="pc-card p-3 text-center">
+            <div style="font-size:1.6rem;font-weight:700;color:#4aada8;">R @totalRevenue.ToString("N2")</div>
+            <div style="font-size:.78rem;color:#6a8080;font-weight:500;">Total Revenue</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="pc-card p-3 text-center">
+            <div style="font-size:1.6rem;font-weight:700;color:#e6a817;">@pendingOrders</div>
+            <div style="font-size:.78rem;color:#6a8080;font-weight:500;">In Progress</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="pc-card p-3 text-center">
+            <div style="font-size:1.6rem;font-weight:700;color:#2e7d32;">@dispatchedCount</div>
+            <div style="font-size:.78rem;color:#6a8080;font-weight:500;">Dispatched</div>
+        </div>
+    </div>
+</div>
+
+<div class="pc-card">
+    <table class="pc-table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Order Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var o in Model)
+            {
+                <tr>
+                    <td style="color:#6a8080;">#@o.OrderId</td>
+                    <td><strong>@o.Customer?.Name</strong></td>
+                    <td>@o.ProductName</td>
+                    <td>@o.Quantity</td>
+                    <td>@o.OrderDate.ToString("dd MMM yyyy")</td>
+                    <td style="font-weight:600;">R @o.Amount.ToString("N2")</td>
+                    <td>
+                        @{
+                            var orderBadge = o.OrderStatus switch {
+                                "Received"   => "badge-received",
+                                "Processing" => "badge-inprogress",
+                                "Dispatched" => "badge-completed",
+                                _            => "badge-received"
+                            };
+                        }
+                        <span class="status-badge @orderBadge">@o.OrderStatus</span>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="7" style="text-align:center; color:#8aa; padding:2rem;">No orders found.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

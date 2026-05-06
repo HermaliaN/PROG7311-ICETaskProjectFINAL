@@ -1,0 +1,80 @@
+@model IEnumerable<PROG7311_ICEFinal.Models.Customer>
+@{
+    ViewData["Title"] = "Customers";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success-custom">✓ @TempData["Success"]</div>
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="page-title mb-0">Customer Database</h1>
+    <a asp-action="AddCustomer" class="btn-teal">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Customer
+    </a>
+</div>
+
+<div class="pc-card p-3 mb-3">
+    <form method="get" class="filter-bar">
+        <div class="search-wrap">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" name="search" placeholder="Search name, email or phone…" value="@ViewBag.CurrentSearch" />
+        </div>
+        <div class="filter-group">
+            <button type="submit" name="sortOrder" value="desc" class="@(ViewBag.CurrentSort != "asc" ? "active" : "")">Newest</button>
+            <button type="submit" name="sortOrder" value="asc" class="@(ViewBag.CurrentSort == "asc" ? "active" : "")">A–Z</button>
+        </div>
+        <button type="submit" class="btn-teal">Search</button>
+    </form>
+</div>
+
+<div class="pc-card">
+    <table class="pc-table">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Registered Date</th>
+                <th>Orders/Progress</th>
+                <th>Status</th>
+                <th style="width:130px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td><strong>@c.Name</strong></td>
+                    <td>@c.PhoneNumber</td>
+                    <td>@c.Email</td>
+                    <td>@c.RegisteredDate.ToString("dd MMM yyyy")</td>
+                    <td style="color:#6a8080;">@c.Bookings.Count booking(s)</td>
+                    <td>
+                        @if (c.IsActive)
+                        {
+                            <span class="status-badge badge-completed">Active</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge badge-cancelled">Inactive</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a asp-action="EditCustomer" asp-route-id="@c.CustomerId" class="btn-outline-teal">Edit</a>
+                            <a asp-action="DeleteCustomer" asp-route-id="@c.CustomerId" class="btn-danger-soft">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="7" style="text-align:center; color:#8aa; padding:2rem;">No customers found.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

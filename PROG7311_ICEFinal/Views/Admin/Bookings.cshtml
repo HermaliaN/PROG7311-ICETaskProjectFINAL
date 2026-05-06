@@ -1,0 +1,98 @@
+@model IEnumerable<PROG7311_ICEFinal.Models.Booking>
+@{
+    ViewData["Title"] = "Bookings";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success-custom">✓ @TempData["Success"]</div>
+}
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="page-title mb-0">Bookings</h1>
+    <a asp-action="AddBooking" class="btn-teal">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Booking
+    </a>
+</div>
+
+<div class="pc-card p-3 mb-3">
+    <form method="get" class="filter-bar">
+        <div class="search-wrap">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" name="search" placeholder="Search customer, service or technician…" value="@ViewBag.CurrentSearch" />
+        </div>
+        <select name="statusFilter" class="status-select" onchange="this.form.submit()">
+            <option value="All" selected="@(ViewBag.StatusFilter == null || ViewBag.StatusFilter == "All")">All Statuses</option>
+            <option value="Pending" selected="@(ViewBag.StatusFilter == "Pending")">Pending</option>
+            <option value="In Progress" selected="@(ViewBag.StatusFilter == "In Progress")">In Progress</option>
+            <option value="Completed" selected="@(ViewBag.StatusFilter == "Completed")">Completed</option>
+            <option value="Cancelled" selected="@(ViewBag.StatusFilter == "Cancelled")">Cancelled</option>
+        </select>
+        <div class="filter-group">
+            <button type="submit" name="sortOrder" value="desc" class="@(ViewBag.CurrentSort != "asc" ? "active" : "")">Newest</button>
+            <button type="submit" name="sortOrder" value="asc" class="@(ViewBag.CurrentSort == "asc" ? "active" : "")">Oldest</button>
+        </div>
+        <button type="submit" class="btn-teal">Search</button>
+    </form>
+</div>
+
+<div class="pc-card">
+    <table class="pc-table">
+        <thead>
+            <tr>
+                <th>Booking ID</th>
+                <th>Customer</th>
+                <th>Service</th>
+                <th>Booking Date</th>
+                <th>Technician</th>
+                <th>Status</th>
+                <th style="width:130px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model)
+            {
+                <tr>
+                    <td style="color:#6a8080;">#@b.BookingId</td>
+                    <td><strong>@b.Customer?.Name</strong></td>
+                    <td>@b.ServiceType</td>
+                    <td>@b.BookingDate.ToString("dd MMM yyyy HH:mm")</td>
+                    <td>
+                        @if (b.Technician != null)
+                        {
+                            <span>@b.Technician.FirstName @b.Technician.LastName</span>
+                        }
+                        else
+                        {
+                            <span style="color:#b0c0c0;font-style:italic;">Unassigned</span>
+                        }
+                    </td>
+                    <td>
+                        @{
+                            var statusBadge = b.Status switch {
+                                "Pending" => "badge-pending",
+                                "In Progress" => "badge-inprogress",
+                                "Completed" => "badge-completed",
+                                "Cancelled" => "badge-cancelled",
+                                _ => "badge-pending"
+                            };
+                        }
+                        <span class="status-badge @statusBadge">@b.Status</span>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a asp-action="EditBooking" asp-route-id="@b.BookingId" class="btn-outline-teal">Edit</a>
+                            <a asp-action="DeleteBooking" asp-route-id="@b.BookingId" class="btn-danger-soft">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="7" style="text-align:center; color:#8aa; padding:2rem;">No bookings found.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>
