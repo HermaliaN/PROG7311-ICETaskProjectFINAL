@@ -1,0 +1,85 @@
+﻿@model IEnumerable<PROG7311_ICEFinal.Models.Customer>
+@{
+    ViewData["Title"] = "Customer Database";
+    Layout = "~/Views/Sales/_SalesLayout.cshtml";
+    var currentSearch = ViewBag.CurrentSearch as string ?? "";
+    var currentSort = ViewBag.CurrentSort as string ?? "desc";
+}
+
+<div class="page-title">Customer Database</div>
+
+<!-- Filter bar -->
+<form method="get" asp-action="ViewCustomers" class="filter-bar mb-3">
+    <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" name="search" value="@currentSearch" placeholder="Search by name, email or phone…" />
+    </div>
+
+    <button type="submit" class="btn-teal">Search</button>
+
+    <a asp-action="ViewCustomers"
+       asp-route-search="@currentSearch"
+       asp-route-sortOrder="@(currentSort == "asc" ? "desc" : "asc")"
+       class="btn-teal d-flex align-items-center gap-1" style="text-decoration:none;">
+        Sort
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            @if (currentSort == "asc")
+            {
+                <polyline points="18 15 12 9 6 15" />
+            }
+            else
+            {
+                <polyline points="6 9 12 15 18 9" />
+            }
+        </svg>
+    </a>
+</form>
+
+<!-- Table -->
+<div class="pc-card">
+    <table class="pc-table">
+        <thead>
+            <tr>
+                <th>Customer ID</th>
+                <th>Customer Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Order In Progress</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="5" style="text-align:center; color:#8aa; padding:2rem;">
+                        No customers found.
+                    </td>
+                </tr>
+            }
+            @foreach (var customer in Model)
+            {
+                var activeOrder = customer.Orders
+                .FirstOrDefault(o => o.OrderStatus == "Received" || o.OrderStatus == "Processing");
+                <tr>
+                    <td>@customer.CustomerId</td>
+                    <td>@customer.Name</td>
+                    <td>@customer.PhoneNumber</td>
+                    <td>@customer.Email</td>
+                    <td>
+                        @if (activeOrder != null)
+                        {
+                            <span class="status-badge badge-processing">@activeOrder.ProductName</span>
+                        }
+                        else
+                        {
+                            <span style="color:#aab; font-size:.8rem;">None</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
