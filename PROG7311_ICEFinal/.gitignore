@@ -1,3 +1,13 @@
 .vs/
 bin/
 obj/
+
+# Database files
+*.mdf
+*.ldf
+*.db
+*.sqlite
+
+# LocalDB files
+**/wwwroot/*.mdf
+**/wwwroot/*.ldf
