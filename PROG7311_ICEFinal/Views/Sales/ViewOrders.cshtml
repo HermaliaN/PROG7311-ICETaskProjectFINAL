@@ -1,0 +1,124 @@
+﻿@model IEnumerable<PROG7311_ICEFinal.Models.Order>
+@{
+    ViewData["Title"] = "Order Management";
+    Layout = "~/Views/Sales/_SalesLayout.cshtml";
+    var currentStatus = ViewBag.CurrentStatus as string ?? "All";
+    var currentSearch = ViewBag.CurrentSearch as string ?? "";
+    var currentSort = ViewBag.CurrentSort as string ?? "desc";
+}
+
+<div class="page-title">Order Management</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert-success-custom">✓ @TempData["Success"]</div>
+}
+
+<!-- Filter bar -->
+<form method="get" asp-action="ViewOrders" class="filter-bar mb-3">
+    <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" name="search" value="@currentSearch" placeholder="Search product or customer…" />
+    </div>
+
+    <!-- Status filter buttons -->
+    <div class="filter-group">
+        @foreach (var s in new[] { "All", "Received", "Processing", "Dispatched" })
+        {
+            <button type="submit" name="statusFilter" value="@s"
+                    class="@(currentStatus == s ? "active" : "")">
+                @s
+            </button>
+        }
+    </div>
+
+    <!-- Sort toggle -->
+    <a asp-action="ViewOrders"
+       asp-route-search="@currentSearch"
+       asp-route-statusFilter="@currentStatus"
+       asp-route-sortOrder="@(currentSort == "asc" ? "desc" : "asc")"
+       class="btn-teal d-flex align-items-center gap-1" style="text-decoration:none;">
+        Sort by Date
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            @if (currentSort == "asc")
+            {
+                <polyline points="18 15 12 9 6 15" />
+            }
+            else
+            {
+                <polyline points="6 9 12 15 18 9" />
+            }
+        </svg>
+    </a>
+</form>
+
+<!-- Table -->
+<div class="pc-card">
+    <table class="pc-table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer ID</th>
+                <th>Product</th>
+                <th>Details</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th style="width:80px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="8" style="text-align:center; color:#8aa; padding:2rem;">
+                        No orders found.
+                    </td>
+                </tr>
+            }
+            @foreach (var order in Model)
+            {
+                var badgeClass = order.OrderStatus switch
+                {
+                    "Received" => "badge-received",
+                    "Processing" => "badge-processing",
+                    "Dispatched" => "badge-dispatched",
+                    _ => ""
+                };
+                <tr>
+                    <td>#@order.OrderId</td>
+                    <td>@order.CustomerId</td>
+                    <td>@order.ProductName</td>
+                    <td>Qty: @order.Quantity</td>
+                    <td>@order.OrderDate.ToString("dd MMM yyyy")</td>
+                    <td>R @order.Amount.ToString("N2")</td>
+                    <td>
+                        <span class="status-badge @badgeClass">@order.OrderStatus</span>
+                    </td>
+                    <td>
+                        <!-- Status dropdown + save -->
+                        <form method="post" asp-action="UpdateStatus" class="d-flex align-items-center gap-1">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="orderId" value="@order.OrderId" />
+                            <select name="newStatus" class="status-select">
+                                @foreach (var s in new[] { "Received", "Processing", "Dispatched" })
+                                {
+                                    <option value="@s" selected="@(order.OrderStatus == s)">@s</option>
+                                }
+                            </select>
+                            <button type="submit" title="Save status"
+                                    style="background:none;border:none;cursor:pointer;color:#4aada8;padding:0 .25rem;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
