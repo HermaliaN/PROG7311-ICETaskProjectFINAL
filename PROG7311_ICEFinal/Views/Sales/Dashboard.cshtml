@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Sales Dashboard";
+    Layout = "~/Views/Sales/_SalesLayout.cshtml";
+}
+
+<p class="mb-4" style="color:#4a6060; font-size:.925rem;">
+    Welcome, <strong>@ViewBag.UserName</strong> — here's your Sales workspace.
+</p>
+
+<div class="row g-3">
+    <!-- View Orders card -->
+    <div class="col-12 col-sm-6 col-md-4">
+        <a asp-controller="Sales" asp-action="ViewOrders" class="text-decoration-none">
+            <div class="pc-card p-4 text-center dashboard-card">
+                <div class="dash-icon mb-3">
+                    <svg width="40" height="40" fill="none" stroke="#4aada8" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                </div>
+                <div style="font-weight:600; color:#1a2e2e; font-size:1rem;">View Orders</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- View Customers card -->
+    <div class="col-12 col-sm-6 col-md-4">
+        <a asp-controller="Sales" asp-action="ViewCustomers" class="text-decoration-none">
+            <div class="pc-card p-4 text-center dashboard-card">
+                <div class="dash-icon mb-3">
+                    <svg width="40" height="40" fill="none" stroke="#4aada8" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
+                    </svg>
+                </div>
+                <div style="font-weight:600; color:#1a2e2e; font-size:1rem;">View Customers</div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<style>
+    .dashboard-card {
+        transition: transform .15s, box-shadow .15s;
+        cursor: pointer;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74,173,168,.18);
+        }
+
+    .dash-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px;
+        background: #d4eeec;
+        border-radius: 14px;
+        margin: 0 auto;
+    }
+</style>
